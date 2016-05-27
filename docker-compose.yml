@@ -1,0 +1,23 @@
+version: '2'
+
+services:
+  authserver1:
+    # image: jiop/authserver:latest
+    build: ./authserver/
+    ports:
+      - "8002"
+    networks:
+      - demo1net
+
+  webserver1:
+    build: ./webserver/
+    # image: jiop/webserver:latest
+    ports:
+      - "8080:8001"
+    networks:
+      - demo1net
+
+networks:
+  demo1net:
+    driver: bridge
+
