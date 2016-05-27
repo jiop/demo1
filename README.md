@@ -8,7 +8,7 @@ Micro-service usage in web application with auth and webserver separated in two 
 
 `make` generate docker images for all different services
 
-`docker-compose up` start all containers for this demo with networks, volumes, etc.
+`docker-compose up --build` build and start all containers for this demo with networks, volumes, etc.
 
 ## Web Server
 
