@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -9,14 +10,8 @@ import (
 )
 
 const WEBSERVER_PORT = "8001"
-const AUTHSERVER_URL = "http://authserver1"
+const AUTHSERVER_URL = "http://demo1_authserver1_1"
 const AUTHSERVER_PORT = "8002"
-
-type AuthServerResponse struct {
-	testval  string
-	username string
-	token    string
-}
 
 type Auth struct{}
 
@@ -28,18 +23,15 @@ func (auth *Auth) Login(username string, password string) string {
 	if err != nil {
 		return ""
 	}
-	var p []byte
-	resp.Body.Read(p)
-	var authServerResponse AuthServerResponse
-	json.Unmarshal(p, &authServerResponse)
-	resp.Body.Close()
+	defer resp.Body.Close()
 
-	// TODO: Check if token is present in the answer!!!
-	log.Print(authServerResponse.token)
-	log.Print(authServerResponse.testval)
-	log.Print(authServerResponse.username)
-	if authServerResponse.token != "" {
-		return authServerResponse.token
+	data, _ := ioutil.ReadAll(resp.Body)
+	r := make(map[string]interface{})
+	json.Unmarshal(data, &r)
+	token := r["token"].(string)
+
+	if token != "" {
+		return token
 	}
 	return ""
 }
