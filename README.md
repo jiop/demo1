@@ -8,7 +8,7 @@ Micro-service usage in web application with auth and webserver separated in two 
 
 `make` generate docker images for all different services
 
-`docker-compose` start all containers for this demo with networks, volumes, etc.
+`docker-compose up` start all containers for this demo with networks, volumes, etc.
 
 ## Web Server
 
@@ -60,7 +60,7 @@ POST /logout (with username and token)
 
 ### Networking
 
-Port 8001 is open for the web server.
+Port 8002 is open for the web server.
 
 Share docker network `demo1net` with the Web Server.
 
