@@ -1,14 +1,43 @@
 # DEMO 1
 
+## Avant-propos
+
+Mostly inspired by an article about test integration by semaphoreci.
+
+TODO: add url
+
+Due to my limited access to internet (limited 3g access), I do not use any web framework or special packages in this project.
+
 ## Purpose of this project
 
 Micro-service usage in web application with auth and webserver separated in two different service using docker.
 
 ## Usage
 
-`make` generate docker images for all different services
+generate docker images for all different services
+```
+make
+```
 
-`docker-compose up --build` build and start all containers for this demo with networks, volumes, etc.
+build and start all containers for this demo with networks, volumes, etc.
+```
+docker-compose up --build
+```
+
+Define an environment variable containing the docker machine ip.
+```
+DOCKER_MACHINE_IP=$(docker-machine default ip)
+```
+
+Login with username "user2" and password "pass2"
+```
+curl -XPOST $DOCKER_MACHINE_IP:8080/login -d username=user2 -d password=pass2 -c cookie.txt
+```
+
+Use stored cookies to access protected content
+```
+curl -XPOST $DOCKER_MACHINE_IP:8080/protected-content -c cookie.txt -b cookie.txt
+```
 
 ## Web Server
 
@@ -20,15 +49,17 @@ Serves html file in order to be interpreted by a web browser.
 
 Answers with appropriate http code.
 
+Serves a cookie containing username and password for further access to protected content.
+
 ### Routes
 
-POST /login (with username and password)
+POST /login (with username and password, responds with json and cookies)
 
-POST /logout (with cookie containing username and token)
+POST /logout (with cookie containing username and token, responds json and empty cookies)
 
-GET /protected-content (with cookie containing username and token)
+GET /protected-content (with cookie containing username and token, responds json)
 
-GET /unprotected-content (no parameters)
+GET /unprotected-content (no parameters, responds with json)
 
 ### Networking
 
@@ -54,9 +85,9 @@ Stores usernames, passwords and tokens.
 
 ### Routes
 
-POST /login (with username and password)
+POST /login (with username and password, responds with json)
 
-POST /logout (with username and token)
+POST /logout (with username and token, responds with json)
 
 ### Networking
 
@@ -74,23 +105,23 @@ Share one volume to store the codebase during development (folder /app on docker
 
 ### General
 
-- Switch to a golang image during development
-- Create real images for authserver and webserver for deploy process
+- Switch to a golang image during development => Dockerfile.dev now use golang image
+- Create real images for authserver and webserver for deploy process => need to create a Dockerfile.prod and Dockerfile.test
 - Add the possibility to scale auth server and web server.
 
 ### Web Server
 
 - Choose a web framework in golang
-- main.go launch the webserver and handle requests
+- main.go launch the webserver and handle requests => DONE
 - conf.yml store IP address of the AuthServer
-- make use of cookies
+- make use of cookies => DONE
 
 ### Auth Server
 
 - choose a different framework in golang
 - main.go launch the authserver and handle requests
-- main.go store (hardcoded for now) the list of all the couples username and password
-- main.go store all couples username and token
+- main.go store (hardcoded for now) the list of all the couples username and password => DONE
+- use Redis or another database to store username and password
 
 ## Notes
 
