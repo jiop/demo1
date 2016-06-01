@@ -4,7 +4,7 @@ MAINTAINER Jérémie IOP <jeremie.iop@gmail.com>
 
 RUN mkdir /app
 
-ADD src/main.go /app/main.go
+ADD src/ /app/
 
 WORKDIR /app
 
